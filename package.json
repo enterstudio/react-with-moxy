@@ -9,7 +9,11 @@
     "build:prod": "./bin/build prod",
     "start": "./bin/server",
     "start:dev": "./bin/watch-server-dev",
-    "precommit": "./bin/lint",
+    "precommit": "lint-staged",
+    "lint-staged": {
+      "*.js": "eslint",
+      "*.css": "stylelint"
+    },
     "test": "npm run lint"
   },
   "repository": {
@@ -68,8 +72,9 @@
     "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "^0.10.0",
     "husky": "^0.13.1",
-    "opn": "^4.0.2",
+    "lint-staged": "^3.4.0",
     "nodemon": "^1.11.0",
+    "opn": "^4.0.2",
     "postcss-css-variables": "^0.6.0",
     "postcss-cssnext": "^2.9.0",
     "postcss-import": "^9.1.0",
