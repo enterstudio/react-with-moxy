@@ -9,17 +9,8 @@
     "build:prod": "./bin/build prod",
     "start": "./bin/server",
     "start:dev": "./bin/watch-server-dev",
-    "lint-staged": "lint-staged",
+    "precommit": "./bin/lint",
     "test": "npm run lint"
-  },
-  "lint-staged": {
-    "src/**/*.js": "eslint",
-    "config/**/*.js": "eslint",
-    "src/**/*.css": "stylelint"
-  },
-  "pre-commit": {
-    "run": "lint-staged",
-    "silent": true
   },
   "repository": {
     "type": "git",
@@ -76,15 +67,14 @@
     "external-svg-sprite-loader": "^2.0.0",
     "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "^0.10.0",
-    "lint-staged": "^3.4.0",
-    "nodemon": "^1.11.0",
+    "husky": "^0.13.1",
     "opn": "^4.0.2",
+    "nodemon": "^1.11.0",
     "postcss-css-variables": "^0.6.0",
     "postcss-cssnext": "^2.9.0",
     "postcss-import": "^9.1.0",
     "postcss-loader": "^1.2.2",
     "postcss-mixins": "^5.4.1",
-    "pre-commit": "^1.2.2",
     "preprocess-loader": "^0.2.0",
     "raw-loader": "^0.5.1",
     "react-hot-loader": "^3.0.0-beta.6",

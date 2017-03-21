@@ -6,8 +6,7 @@ const yargs = require('yargs');
 const planify = require('planify');
 const eslint = require('eslint');
 const stylelint = require('stylelint');
-
-const projectDir = `${__dirname}/..`;
+const spawn = require('child_process').spawn;
 
 // ---------------------------------------------------------
 // CLI definition
@@ -81,12 +80,63 @@ function runStylelint(files) {
     });
 }
 
+function getFileExtension(filename) {
+    return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename)[0] : undefined;
+}
+
+function getStagedFiles(callback) {
+    const cmd = spawn('git', ['status', '--porcelain', 'src', 'config']);
+
+    cmd.stdout.on('data', (data) => {
+        const files = `${data}`.split('\n');
+        let jsFiles = [];
+        let cssFiles = [];
+
+        files.forEach((fileTmp) => {
+            const file = fileTmp.substring(3, fileTmp.length);
+            const fileExtension = getFileExtension(file);
+
+            switch (fileExtension) {
+            case 'js':
+                jsFiles = [...jsFiles, file];
+                break;
+
+            case 'css':
+                cssFiles = [...cssFiles, file];
+                break;
+
+            default:
+                break;
+            }
+        });
+
+        callback({ jsFiles, cssFiles });
+    });
+}
+
 // ---------------------------------------------------------
 // Steps
 // ---------------------------------------------------------
 
 planify({ exit: true, reporter: argv.reporter })
-.step('Running es-lint in src/**/*.js, config/**/*.js config/**/*.js', () =>
-    runEslint([`${projectDir}/src/**/*.js`, `${projectDir}/config/**/*.js`]))
-.step('Running stylelint in src/**/*.css', () => runStylelint([`${projectDir}/src/**/*.css`]))
+.step('Init Linting Process', (data, done) => {
+    console.log('Getting staged files..');
+    getStagedFiles((files) => { data.files = files; });
+    setTimeout(done, 500);
+})
+.step('Running es-lint', (data) => {
+    if (Object.keys(data).length !== 0) {
+        const { jsFiles } = data.files;
+
+        jsFiles.length && runEslint(jsFiles);
+    }
+})
+.step('Running stylelint', (data, done) => {
+    if (Object.keys(data).length !== 0) {
+        const { cssFiles } = data.files;
+
+        cssFiles.length && runStylelint(cssFiles);
+        setTimeout(done, 500);
+    }
+})
 .run();
