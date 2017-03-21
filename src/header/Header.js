@@ -1,21 +1,29 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, PropTypes } from 'react';
 import { Link } from 'react-router';
+import classNames from 'classnames';
 import SvgInline from 'shared/components/svg/SvgInline';
 import Navigation from './navigation/Navigation';
 import moxySvg from 'shared/media/images/logos/moxy-square.inline.svg';
-import './Header.css';
+import styles from './Header.css';
 
 class Header extends PureComponent {
     render() {
+        const { className } = this.props;
+        const headerClass = classNames(`${styles.header}`, `${className}`);
+
         return (
-            <header className="header">
+            <header className={ headerClass }>
                 <Link to="/">
-                    <SvgInline className="header__logo" svg={ moxySvg } />
+                    <SvgInline className={ styles.logo } svg={ moxySvg } />
                 </Link>
-                <Navigation classname="header__navigation" />
+                <Navigation />
             </header>
         );
     }
 }
+
+Header.propTypes = {
+    className: PropTypes.string,
+};
 
 export default Header;

@@ -2,7 +2,7 @@ import React, { PureComponent, PropTypes } from 'react';
 import Helmet from 'react-helmet';
 import Header from './header/Header';
 import Footer from './footer/Footer';
-import './App.css';
+import styles from './App.css';
 import { default as buildPageRoutes } from './pages/buildRoutes';
 
 class App extends PureComponent {
@@ -10,7 +10,7 @@ class App extends PureComponent {
         const { children } = this.props;
 
         return (
-            <div className="app">
+            <div className={ styles.app }>
                 <Helmet
                     htmlAttributes={ { lang: 'en' } }
                     defaultTitle="MOXY"
@@ -19,9 +19,9 @@ class App extends PureComponent {
                         { name: 'description', content: 'MOXY\'s awesome react-with-moxy boilerplate' },
                     ] } />
 
-                <Header />
+                <Header className={ styles.header } />
                 { children }
-                <Footer />
+                <Footer className={ styles.footer } />
             </div>
         );
     }

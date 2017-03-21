@@ -1,6 +1,6 @@
 import React, { PureComponent, PropTypes } from 'react';
 import classnames from 'classnames';
-import './Svg.css';
+import styles from './Svg.css';
 
 // See: https://github.com/Karify/external-svg-sprite-loader
 
@@ -9,7 +9,7 @@ class Svg extends PureComponent {
         const { svg, className, title, ...props } = this.props;
 
         return (
-            <i className={ classnames('svg', className) }>
+            <i className={ classnames(styles.svg, className) }>
                 <svg viewBox={ svg.viewBox } { ...props }>
                     { title ? <title>{ title }</title> : null }
                     <use xlinkHref={ svg.symbol } />

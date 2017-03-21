@@ -8,6 +8,7 @@ const yargs = require('yargs');
 const planify = require('planify');
 const webpack = require('webpack');
 const rimraf = require('rimraf');
+const getPort = require('gport');
 const internalIp = require('internal-ip');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
@@ -41,7 +42,7 @@ const argv = yargs
     alias: 'p',
     type: 'number',
     default: Number(process.env.PORT) || 3000,
-    describe: 'The port to bind to',
+    describe: 'The port to bind to (will automatically find another if already in use)',
 })
 .option('polling', {
     alias: ['poll'],
@@ -162,6 +163,19 @@ function prepareWeb() {
     rimraf.sync(`${projectDir}/web/build`);
 }
 
+function findFreePort() {
+    return new Promise((resolve) => {
+        getPort(argv.port, (port) => {
+            if (port !== argv.port) {
+                process.stdout.write(`Port ${argv.port} is already in use, using ${port} instead..\n`);
+            }
+
+            argv.port = port;
+            resolve();
+        });
+    });
+}
+
 function runServer() {
     const app = express();
 
@@ -255,5 +269,6 @@ function runServer() {
 planify({ exit: true, reporter: argv.reporter })
 .step(`Validating ${env} environment`, () => validator.validateEnvironment(env))
 .step('Preparing web directory', () => prepareWeb())
+.step('Finding free port', () => findFreePort())
 .step('Running server', () => runServer())
 .run();

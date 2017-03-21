@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react';
-import './Home.css';
+import styles from './Home.css';
 
 class Home extends PureComponent {
     render() {
         return (
-            <main className="home-page">
-                <div className="home-page__hero" />
-                <div className="home-page__container">
+            <main className={ styles.homePage }>
+                <div className={ styles.hero } />
+                <div className={ styles.container }>
                     <h1>Heading 1</h1>
                     <p>
                         <a href="https://google.com">Lorem</a> ipsum <em>dolor</em> sit <strong>amet</strong>, consectetur adipiscing elit.
@@ -83,6 +83,5 @@ class Home extends PureComponent {
         );
     }
 }
-
 
 export default Home;

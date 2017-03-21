@@ -4,13 +4,13 @@
    Layout
    ========================================================================== */
 
-@mixin layout-main .home-page, .home-page__container;
+@mixin layout-main .home-page, .container;
 
 /* ==========================================================================
    Hero
    ========================================================================== */
 
-.home-page__hero {
+.hero {
     position: relative;
     height: 500px;
     min-height: 200px;
@@ -18,12 +18,12 @@
     overflow: hidden;
 }
 
-.home-page__hero::before {
+.hero::before {
     content: "";
     position: absolute;
     width: calc(100% + 300px);
     height: 100%;
     display: block;
-    background: url("~shared/media/images/backgrounds/moxy-crowd.jpg") -300px center no-repeat;
+    background: url("shared/media/images/backgrounds/moxy-crowd.jpg") -300px center no-repeat;
     background-size: cover;
 }

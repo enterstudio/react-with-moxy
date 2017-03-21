@@ -11,10 +11,10 @@
     flex-direction: column;
 }
 
-.app .header {
+.header {
     flex: 0 0 auto;
 }
 
-.app .footer {
+.footer {
     flex: 0 0 auto;
 }

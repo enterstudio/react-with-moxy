@@ -1,19 +1,19 @@
 import React, { PureComponent } from 'react';
 import { IndexLink, Link } from 'react-router';
-import './Navigation.css';
+import styles from './Navigation.css';
 
 class Navigation extends PureComponent {
     render() {
         return (
-            <nav className="header-navigation">
-                <ul className="header-navigation__list">
-                    <li className="header-navigation__list-item">
-                        <IndexLink to="/" className="header-navigation__link" activeClassName="header-navigation__link--active">
+            <nav>
+                <ul className={ styles.list }>
+                    <li className={ styles.listItem }>
+                        <IndexLink to="/" className={ styles.link } activeClassName={ styles.isActive }>
                             Home
                         </IndexLink>
                     </li>
-                    <li className="header-navigation__list-item">
-                        <Link to="/about" className="header-navigation__link" activeClassName="header-navigation__link--active">
+                    <li className={ styles.listItem }>
+                        <Link to="/about" className={ styles.link } activeClassName={ styles.isActive }>
                             About
                         </Link>
                     </li>

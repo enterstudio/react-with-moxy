@@ -107,8 +107,11 @@ module.exports = (options) => {
                             {
                                 loader: 'css-loader',
                                 options: {
+                                    modules: true,
                                     sourceMap: true,
                                     importLoaders: 1,
+                                    camelCase: 'dashes',
+                                    localIdentName: '[name]__[local]___[hash:base64:5]!',
                                 },
                             },
                             {
