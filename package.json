@@ -4,6 +4,8 @@
   "description": "The https://project-domain.com web app",
   "scripts": {
     "lint": "./bin/lint",
+    "lint-staged": "./bin/lint staged",
+    "lint-modified": "./bin/lint modified",
     "build": "./bin/build",
     "build:dev": "./bin/build dev",
     "build:prod": "./bin/build prod",

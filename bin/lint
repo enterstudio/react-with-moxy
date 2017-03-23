@@ -6,7 +6,9 @@ const yargs = require('yargs');
 const planify = require('planify');
 const eslint = require('eslint');
 const stylelint = require('stylelint');
-const spawn = require('child_process').spawn;
+const path = require('path');
+const spawnSync = require('child_process').spawnSync;
+const projectDir = `${__dirname}/..`;
 
 // ---------------------------------------------------------
 // CLI definition
@@ -17,7 +19,7 @@ const argv = yargs
 .wrap(Math.min(120, yargs.terminalWidth()))
 .help('help').alias('help', 'h')
 .usage('Usage: ./$0 [options]')
-.demand(0, 0)
+.demand(0, 1)
 .option('lint-output', {
     alias: 'l',
     type: 'boolean',
@@ -80,38 +82,36 @@ function runStylelint(files) {
     });
 }
 
-function getFileExtension(filename) {
-    return (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename)[0] : undefined;
-}
+function getStagedFiles(target) {
+    const params = ['diff', '--name-only', 'src', 'config'];
 
-function getStagedFiles(callback) {
-    const cmd = spawn('git', ['status', '--porcelain', 'src', 'config']);
+    if (target === 'staged') {
+        params.splice(2, 0, '--cached');
+    }
 
-    cmd.stdout.on('data', (data) => {
-        const files = `${data}`.split('\n');
-        let jsFiles = [];
-        let cssFiles = [];
+    const cmd = spawnSync('git', params);
+    const files = `${cmd.stdout.toString()}`.split('\n');
+    const jsFiles = [];
+    const cssFiles = [];
 
-        files.forEach((fileTmp) => {
-            const file = fileTmp.substring(3, fileTmp.length);
-            const fileExtension = getFileExtension(file);
+    files.forEach((file) => {
+        const fileExtension = path.extname(file);
 
-            switch (fileExtension) {
-            case 'js':
-                jsFiles = [...jsFiles, file];
-                break;
+        switch (fileExtension) {
+        case '.js':
+            jsFiles.push(file);
+            break;
 
-            case 'css':
-                cssFiles = [...cssFiles, file];
-                break;
+        case '.css':
+            cssFiles.push(file);
+            break;
 
-            default:
-                break;
-            }
-        });
-
-        callback({ jsFiles, cssFiles });
+        default:
+            break;
+        }
     });
+
+    return { jsFiles, cssFiles };
 }
 
 // ---------------------------------------------------------
@@ -119,24 +119,29 @@ function getStagedFiles(callback) {
 // ---------------------------------------------------------
 
 planify({ exit: true, reporter: argv.reporter })
-.step('Init Linting Process', (data, done) => {
-    console.log('Getting staged files..');
-    getStagedFiles((files) => { data.files = files; });
-    setTimeout(done, 500);
-})
-.step('Running es-lint', (data) => {
-    if (Object.keys(data).length !== 0) {
-        const { jsFiles } = data.files;
+.step('Init Linting', (data) => {
+    const lintTarget = argv._[0];
 
-        jsFiles.length && runEslint(jsFiles);
+    if (lintTarget) {
+        data.files = getStagedFiles(lintTarget);
     }
 })
-.step('Running stylelint', (data, done) => {
-    if (Object.keys(data).length !== 0) {
-        const { cssFiles } = data.files;
-
-        cssFiles.length && runStylelint(cssFiles);
-        setTimeout(done, 500);
+.step('Running es-lint', ({ files }) => {
+    if (!files) {
+        return runEslint([`${projectDir}/src/**/*.js`, `${projectDir}/config/**/*.js`]);
     }
+
+    const { jsFiles } = files;
+
+    return jsFiles && jsFiles.length && runEslint(jsFiles);
+})
+.step('Running stylelint', ({ files }) => {
+    if (!files) {
+        return runStylelint([`${projectDir}/src/**/*.css`]);
+    }
+
+    const { cssFiles } = files;
+
+    return cssFiles && cssFiles.length && runStylelint(cssFiles);
 })
 .run();
