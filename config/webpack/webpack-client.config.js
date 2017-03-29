@@ -100,7 +100,7 @@ module.exports = (options) => {
                         fallback: {
                             loader: 'style-loader',
                             options: {
-                                fixUrls: !options.build,
+                                convertToAbsoluteUrls: !options.build,
                             },
                         },
                         use: [

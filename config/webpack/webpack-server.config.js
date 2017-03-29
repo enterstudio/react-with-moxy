@@ -95,7 +95,7 @@ module.exports = (options) => {
                             fallback: {
                                 loader: 'style-loader',
                                 options: {
-                                    fixUrls: options.env === 'dev',
+                                    convertToAbsoluteUrls: true,
                                 },
                             },
                             use: [
