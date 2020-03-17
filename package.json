@@ -44,7 +44,7 @@
     "react-router-scroll": "^0.4.1",
     "svg-inline-react": "^1.0.3",
     "svgxuse": "^1.2.1",
-    "yargs": "^6.6.0"
+    "yargs": "^13.1.0"
   },
   "devDependencies": {
     "babel-core": "^6.22.1",
