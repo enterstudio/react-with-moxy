@@ -32,7 +32,7 @@
     "compression": "^1.6.2",
     "dom4": "^1.8.3",
     "express": "^4.14.1",
-    "internal-ip": "^1.2.0",
+    "internal-ip": "^2.0.0",
     "lodash": "^4.17.4",
     "nprogress": "^0.2.0",
     "pify": "^2.3.0",
